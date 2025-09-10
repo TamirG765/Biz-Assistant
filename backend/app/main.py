@@ -1,6 +1,7 @@
 import logging
 import sys
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from .core.settings import settings
 from .api.health import router as health_router
 
@@ -17,6 +18,16 @@ def create_app() -> FastAPI:
         docs_url="/docs",
         redoc_url="/redoc",
     )
+    
+    # Add CORS middleware
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+    
     app.include_router(health_router, prefix="")
 
     @app.get("/")
